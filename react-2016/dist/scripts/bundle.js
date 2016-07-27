@@ -32058,24 +32058,48 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var Login = React.createClass({displayName: "Login",
+    getInitialState: function() {
+          return {
+                username: null
+            ,
+               password: null
+          };
+        },
+        userChangeHandler: function(event) {
+            this.setState({username: event.target.value});
+        },
+        passwordChangeHandler: function(event) {
+            this.setState({password: event.target.value});
+        },
+        formSubmitHandler: function(event) {
+            event.preventDefault();
+            console.log(this.state);
+            $.ajax({
+              url: 'http://127.0.0.1:8000/api/v1/login/'
+              , type: 'POST'
+              , data: this.state
+            }).then(function(data) {
+              sessionStorage.setItem('authToken', data.token);
+              //redirect to homepage
+            });
+        },
+
     render: function () {
-        var styles = {
-            background: '#7A3C3C',
-        };
         return (
-            React.createElement("div", {className: "text-center"}, 
-            React.createElement("form", null, 
-            React.createElement("h2", null, "Login form"), 
-            React.createElement("input", {type: "text", placeholder: "Enter your name"}), React.createElement("br", null), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "password", placeholder: "Enter your pass"}), React.createElement("br", null), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "submit", value: "login"}), 
-            React.createElement(Link, {to: "register"}, 
-            React.createElement("input", {type: "button", value: "register"})
-            )
-            )
-            )
+                React.createElement("div", {className: "text-center"}, 
+                React.createElement("form", null, 
+                    React.createElement("br", null), 
+                    React.createElement("h2", null, "Login form"), 
+                    React.createElement("input", {type: "text", name: "username", placeholder: "Enter your name", onChange: this.userChangeHandler}), React.createElement("br", null), 
+                    React.createElement("br", null), 
+                    React.createElement("input", {type: "password", placeholder: "Enter your pass", onChange: this.passwordChangeHandler}), React.createElement("br", null), 
+                    React.createElement("br", null), 
+                    React.createElement("input", {type: "submit", className: "button", value: "login", onClick: this.formSubmitHandler}), 
+                    React.createElement(Link, {to: "register"}, 
+                    React.createElement("input", {type: "button", className: "button", value: "register "})
+                    )
+                )
+                )
         );
     }
 });
@@ -32110,11 +32134,8 @@ var Link = Router.Link;
 
 var Register = React.createClass({displayName: "Register",
     render: function () {
-        /*var styles = {
-            background: '#7A3C3C',
-        };*/
         return (
-        	React.createElement("div", {className: "text-center"}, 
+            React.createElement("div", {className: "text-center"}, 
             React.createElement("form", null, 
             React.createElement("h2", null, " Register form "), 
             React.createElement("br", null), 
@@ -32126,7 +32147,7 @@ var Register = React.createClass({displayName: "Register",
             React.createElement("br", null), 
             React.createElement("input", {type: "mail", placeholder: "Enter your e-mail"}), " ", React.createElement("br", null), 
             React.createElement("br", null), 
-            React.createElement("input", {type: "submit", value: "Register"})
+            React.createElement("input", {type: "submit", className: "button", value: "Register"})
             )
             )
         );

@@ -6,11 +6,8 @@ var Link = Router.Link;
 
 var Register = React.createClass({
     render: function () {
-        /*var styles = {
-            background: '#7A3C3C',
-        };*/
         return (
-        	<div className="text-center">
+            <div className="text-center">
             <form>
             <h2> Register form </h2>
             <br />
@@ -22,7 +19,7 @@ var Register = React.createClass({
             <br />
             <input type="mail" placeholder="Enter your e-mail"/> <br />
             <br />
-            <input type="submit" value="Register"/>
+            <input type="submit" className="button" value="Register"/>
             </form>
             </div>
         );
