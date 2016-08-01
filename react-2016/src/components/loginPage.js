@@ -22,31 +22,36 @@ var Login = React.createClass({
             event.preventDefault();
             console.log(this.state);
             $.ajax({
-              url: 'http://127.0.0.1:8000/api/v1/login/'
-              , type: 'POST'
-              , data: this.state
+                url: 'http://127.0.0.1:8000/api/v1/login/'
+                , type: 'POST'
+                , data: this.state
             }).then(function(data) {
-              sessionStorage.setItem('authToken', data.token);
-              //redirect to homepage
-            });
+                sessionStorage.setItem('authToken', data.token);
+                Router.HashLocation.push("pentalog");
+              });
         },
 
     render: function () {
         return (
-                <div className="text-center">
+
+            <div>
+                <div className="text-center jumbotron">
                 <form>
-                    <br />
-                    <h2>Login form</h2>
+                    <h2> Login form </h2>
                     <input type="text" name="username" placeholder="Enter your name" onChange={this.userChangeHandler}/><br/>
                     <br />
                     <input type = "password" placeholder="Enter your pass" onChange={this.passwordChangeHandler}/>< br />
                     <br />
                     <input type="submit" className="button" value="login" onClick={this.formSubmitHandler}/>
-                    <Link to="register">
-                    <input type="button" className="button" value="register "/>
-                    </Link>
+                    
                 </form>
+                <br />
                 </div>
+                <div className="text-center jumbotron margin-top">
+                    Don`t have an account?<br />
+                        <Link to="register">Sign up</Link>
+                </div>
+            </div>
         );
     }
 });

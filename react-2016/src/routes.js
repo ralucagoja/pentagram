@@ -20,6 +20,7 @@ var routes = (
     <Route name="register" handler={require('./components/registerPage')} />
 
     <Route name="login" handler={require('./components/loginPage')} />
+    <Route name="pentalog" handler={require('./components/pentalogPage')} />
   </Route>
 );
 

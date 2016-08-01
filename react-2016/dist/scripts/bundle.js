@@ -32075,31 +32075,36 @@ var Login = React.createClass({displayName: "Login",
             event.preventDefault();
             console.log(this.state);
             $.ajax({
-              url: 'http://127.0.0.1:8000/api/v1/login/'
-              , type: 'POST'
-              , data: this.state
+                url: 'http://127.0.0.1:8000/api/v1/login/'
+                , type: 'POST'
+                , data: this.state
             }).then(function(data) {
-              sessionStorage.setItem('authToken', data.token);
-              //redirect to homepage
-            });
+                sessionStorage.setItem('authToken', data.token);
+                Router.HashLocation.push("pentalog");
+              });
         },
 
     render: function () {
         return (
-                React.createElement("div", {className: "text-center"}, 
+
+            React.createElement("div", null, 
+                React.createElement("div", {className: "text-center jumbotron"}, 
                 React.createElement("form", null, 
-                    React.createElement("br", null), 
-                    React.createElement("h2", null, "Login form"), 
+                    React.createElement("h2", null, " Login form "), 
                     React.createElement("input", {type: "text", name: "username", placeholder: "Enter your name", onChange: this.userChangeHandler}), React.createElement("br", null), 
                     React.createElement("br", null), 
                     React.createElement("input", {type: "password", placeholder: "Enter your pass", onChange: this.passwordChangeHandler}), React.createElement("br", null), 
                     React.createElement("br", null), 
-                    React.createElement("input", {type: "submit", className: "button", value: "login", onClick: this.formSubmitHandler}), 
-                    React.createElement(Link, {to: "register"}, 
-                    React.createElement("input", {type: "button", className: "button", value: "register "})
-                    )
+                    React.createElement("input", {type: "submit", className: "button", value: "login", onClick: this.formSubmitHandler})
+                    
+                ), 
+                React.createElement("br", null)
+                ), 
+                React.createElement("div", {className: "text-center jumbotron margin-top"}, 
+                    "Don`t have an account?", React.createElement("br", null), 
+                        React.createElement(Link, {to: "register"}, "Sign up")
                 )
-                )
+            )
         );
     }
 });
@@ -32132,30 +32137,84 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
+var Pentalog = React.createClass({displayName: "Pentalog",
+	render: function() {
+        return (
+                React.createElement("div", {className: "text-center jumbotron"}, 
+                     React.createElement("h1", null, "sibfwve")
+                )
+		);
+	}
+});
+
+module.exports = Pentalog;
+
+},{"react":196,"react-router":27}],203:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+
 var Register = React.createClass({displayName: "Register",
+    getInitialState: function() {
+          return {
+                username: null
+            ,   
+            password: null
+            ,   
+            passwordRepeat: null
+            ,   
+            email: null
+          };
+        },
+        userChangeHandler: function(event) {
+            this.setState({username: event.target.value});
+        },
+        passwordChangeHandler: function(event) {
+            this.setState({password: event.target.value});
+        },
+        passwordRepeatChangeHandler: function(event) {
+            this.setState({passwordRepeat: event.target.value});
+        },
+        emailChangeHandler: function(event) {
+            this.setState({email: event.target.value});
+        },
+        formSubmitHandler: function(event) {
+            event.preventDefault();
+            console.log(this.state);
+            $.ajax({
+              url: 'http://127.0.0.1:8000/api/v1/login/'
+              , type: 'POST'
+              , data: this.state
+            }).then(function(data) {
+              sessionStorage.setItem('authToken', data.token);
+              //redirect to homepage
+            });
+        },
     render: function () {
         return (
-            React.createElement("div", {className: "text-center"}, 
-            React.createElement("form", null, 
-            React.createElement("h2", null, " Register form "), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "text", placeholder: "Enter your name"}), " ", React.createElement("br", null), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "password", placeholder: "Enter your pass"}), " ", React.createElement("br", null), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "password", placeholder: "Re-enter your pass"}), " ", React.createElement("br", null), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "mail", placeholder: "Enter your e-mail"}), " ", React.createElement("br", null), 
-            React.createElement("br", null), 
-            React.createElement("input", {type: "submit", className: "button", value: "Register"})
-            )
-            )
+                React.createElement("div", {className: "text-center jumbotron"}, 
+                React.createElement("form", null, 
+                React.createElement("h2", null, " Create a new account :) "), 
+                React.createElement("br", null), 
+                React.createElement("input", {type: "text", placeholder: "Enter your name", onChange: this.userChangeHandler}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                React.createElement("input", {type: "password", placeholder: "Enter your pass", onChange: this.passwordChangeHandler}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                React.createElement("input", {type: "password", placeholder: "Re-enter your pass", onChange: this.passwordRepeatChangeHandler}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                React.createElement("input", {type: "mail", placeholder: "Enter your e-mail", onChange: this.emailChangeHandler}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                React.createElement("input", {type: "submit", className: "button", value: "Register", onClick: this.formSubmitHandler})
+                )
+                )  
         );
     }
 });
 module.exports = Register;
 
-},{"react":196,"react-router":27}],203:[function(require,module,exports){
+},{"react":196,"react-router":27}],204:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32165,7 +32224,7 @@ var routes = require('./routes');
 Router.run(routes, function(Handler) {
 	React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./routes":204,"react":196,"react-router":27}],204:[function(require,module,exports){
+},{"./routes":205,"react":196,"react-router":27}],205:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32187,10 +32246,11 @@ var routes = (
 
     React.createElement(Route, {name: "register", handler: require('./components/registerPage')}), 
 
-    React.createElement(Route, {name: "login", handler: require('./components/loginPage')})
+    React.createElement(Route, {name: "login", handler: require('./components/loginPage')}), 
+    React.createElement(Route, {name: "pentalog", handler: require('./components/pentalogPage')})
   )
 );
 
 module.exports = routes;
 
-},{"./components/about/aboutPage":197,"./components/app":198,"./components/loginPage":200,"./components/notFoundPage":201,"./components/registerPage":202,"react":196,"react-router":27}]},{},[203]);
+},{"./components/about/aboutPage":197,"./components/app":198,"./components/loginPage":200,"./components/notFoundPage":201,"./components/pentalogPage":202,"./components/registerPage":203,"react":196,"react-router":27}]},{},[204]);

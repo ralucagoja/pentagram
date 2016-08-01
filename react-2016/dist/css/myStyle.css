@@ -1,23 +1,28 @@
 body{
 
-	background-image: url('/images/Sunset.jpg');
+	background-image: url('/images/Instagram.jpg');
 
 
-}
+}/*
 form{
 	width: 370px;
 	height: 300px;
-	/*background-color: #715353; /*culoarea din casuta de inregistrare*/
+	/*background-color: #715353; /*culoarea din casuta de inregistrare
 	border-radius: 10px;
 	box-shadow: 0 0 30px #358077;
 	text-align: center;
-}
+}*/
 form button{
 	width: 135px;
 	margin: 20px 0px 30px 30px;
 }
+h2 {
+	color: #64CEB5;
+    font-size: 250%;
+}
 .jumbotron{
-	background: rgba(128, 255, 255, 0.2);
+	background: rgba(100, 211, 176, 0.2);
+	padding: 20px;
 }
 .container-fluid-center{
 	width:370px;
@@ -25,24 +30,25 @@ form button{
 }
 .navbar-default .container-fluid{
    /* background-color: #07464E;*/
-	background: rgba(128, 255, 255, 0.2);
+	background: rgba(100, 211, 176, 0.2);
     border-radius: 100px;
 }
 .navbar{
 	border-radius: 100px;/*
 	border-color: #07464E;*/
-	background: rgba(128, 255, 255, 0.2);
+	background: rgba(100, 211, 176, 0.2);
 	border: none;
 }
 .button{
-	background-color: #42a5f5;
+	background-color: #64CEB5;
 	border: 10px;
-	color: black;
-	padding: 10px 32px;
-	text-align: center;
+	color: black;	text-align: center;
 	position: relative;
 	height: 40px;
 	width: 40%;
 	top: 5px;
 	float: center;
+}
+.margin-top{
+	margin-top: 200px;
 }
