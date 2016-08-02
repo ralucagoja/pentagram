@@ -21,6 +21,7 @@ var routes = (
 
     <Route name="login" handler={require('./components/loginPage')} />
     <Route name="pentalog" handler={require('./components/pentalogPage')} />
+    <Route name="pentalog:photo_id" handler={require('./components/singlePhoto')} />
   </Route>
 );
 

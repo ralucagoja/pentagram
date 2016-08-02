@@ -8,9 +8,12 @@ from rest_framework import status
 from pentagram.models import Photo
 from pentagram.models import Comment, Likes
 from pentagram.serializers import PhotoSerializer, UserSerializer, CommentSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 
 
 @api_view(['GET', 'POST'])
+@permission_classes((AllowAny,))
 def photos(request):
     if request.method == 'GET':
         photos = Photo.objects.all()
@@ -25,7 +28,7 @@ def photos(request):
 
 
 @api_view(['POST'])
-@permission_classes((AllowAny, ))
+@permission_classes((AllowAny,))
 def users(request):
     if request.method == "POST":
         user_serializer = UserSerializer(data=request.data)
@@ -36,6 +39,7 @@ def users(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes((AllowAny,))
 def comments(request, id_photo):
     if request.method == 'GET':
         comments = Comment.objects.filter(photo=id_photo)
@@ -50,6 +54,7 @@ def comments(request, id_photo):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes((AllowAny,))
 def like(request, id_photo):
     if request.method == 'POST':
         if Likes.objects.filter(photo_id=id_photo, user=request.user.id).count() == 0:
@@ -62,3 +67,10 @@ def like(request, id_photo):
         if request.method == 'GET':
             counter = Likes.objects.filter(photo_id=id_photo).count()
             return Response(status=status.HTTP_302_FOUND, data=counter)
+
+
+class CustomObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        return Response({'token': token.key, 'id': token.user_id})

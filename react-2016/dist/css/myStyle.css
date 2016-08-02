@@ -52,3 +52,72 @@ h2 {
 .margin-top{
 	margin-top: 200px;
 }
+
+/*
+    IMAGE BLOCKS STYLES 
+*/
+
+/*
+.image-gallery-bg {
+    background: rgba(255,255,255,0.5);
+    margin-top: 50px;
+}*/
+
+.image-block {
+    float: left;
+    overflow: hidden;
+    margin-top: 40px;
+    position: relative;
+    width: 395px;
+    height: 210px;
+    margin-left: 50px;
+}
+
+.image-block > img {
+    /*height: 350px;*/
+    vertical-align: middle;
+/*    border-radius: 5px;*/
+    background-color: #000;
+}
+
+
+.image-block > div.img-caption {
+    position: absolute;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    color: #FFF;
+    width: 100%;
+}
+
+i.my-img-comment-icon {
+    font-size: 25px;
+    vertical-align: middle;
+    overflow: hidden;
+    padding: 8px;
+}
+
+i.my-img-like-icon {
+    font-size: 25px;
+    vertical-align: middle;
+    overflow: hidden;
+    padding: 8px;
+}
+
+.image-block > div.img-caption > div.img-caption-divs > a {
+    font-size: 20px;
+    color: #EEEEEE;
+    text-decoration: none;
+}
+
+
+.image-block > div.img-caption > div.img-caption-divs > a:hover {
+    color: yellow;
+    cursor: pointer;
+}
+
+
+.image-block > div.img-caption > div.img-caption-divs {
+    float: left;
+    display: inline-block;
+    width: 50%;
+}

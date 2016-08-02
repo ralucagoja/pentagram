@@ -21,11 +21,11 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
 from rest_framework.authtoken import views as authtoken_views
 
-from pentagram.views import users, photos, comments, like
+from pentagram.views import users, photos, comments, like, CustomObtainAuthToken
 
 urlpatterns = patterns('',
 
-                       url(r'^api/v1/login/$', authtoken_views.obtain_auth_token),
+                       url(r'^api/v1/login/$', CustomObtainAuthToken.as_view()),
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^user/login', auth_views.login, {'template_name': 'login.html'}, name="login"),
                        url(r'^$', TemplateView.as_view(template_name='index.html'), name="homepage"),

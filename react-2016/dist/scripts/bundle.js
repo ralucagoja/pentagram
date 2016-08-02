@@ -32138,13 +32138,76 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var Pentalog = React.createClass({displayName: "Pentalog",
-	render: function() {
+
+getInitialState: function(){
+            return {
+                images: [{
+                    "id": 1,
+                    "user": 2,
+                    "photo": "photos/user_raluca/7f64ac54-4a5d-11e6-9170-ace0105093c9_Old-Sailboat-Sunset-1600x900.jpg "
+                }]
+            };
+    },
+
+    componentWillMount: function() {
+        var self = this;
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/v1/photos/'
+            , type: 'GET'
+            , error: function(xhr, textStatus, errorThrown) {
+
+            }
+        }).then(function(data) {
+            self.setState({images: data});
+        });
+    }
+
+    , onCommentHandler: function(event) {
+        var photoId = event.target.dataset.id;
+        Router.HashLocation.push('photo/' + photoId);
+    }
+    , render: function() {
+        var self = this;
+
+        var tokenNumber = sessionStorage.getItem("authToken");
+        if (!tokenNumber) {
+            Router.HashLocation.push("login");
+        }
+
         return (
-                React.createElement("div", {className: "text-center jumbotron"}, 
-                     React.createElement("h1", null, "sibfwve")
+            React.createElement("div", {className: "row image-gallery-bg"}, 
+                React.createElement("div", {className: "col-md-12"}, 
+                    
+                        self.state.images.map(function(item) {
+                            return (
+                                React.createElement("div", {className: "row image-gallery-view"}, 
+                                React.createElement("div", {className: "image-block", key: item.id}, 
+                                    React.createElement("a", {href: '#/photo/' + item.id}, 
+                                        React.createElement("img", {src: 'http://127.0.0.1:8000' + item.photo, id: 'image-' + item.id, "data-id": item.id, width: "100%", height: "100%"})
+                                    ), 
+                                    React.createElement("div", {className: "img-caption"}, 
+                                        React.createElement("div", {className: "img-caption-divs"}, 
+                                            React.createElement("a", {href: ""}, 
+                                                React.createElement("i", {className: "material-icons my-img-comment-icon"}, "comments"), 
+                                                "Comments"
+                                            )
+                                        ), 
+                                        React.createElement("div", {className: "img-caption-divs"}, 
+                                            React.createElement("a", {href: ""}, 
+                                                React.createElement("i", {className: "material-icons my-img-like-icon right"}, "thumb_up"), 
+                                                " "
+                                            )
+                                        )
+                                    )
+                                )
+                                )
+                            );
+                        })
+                    
                 )
-		);
-	}
+            )
+        );
+    }
 });
 
 module.exports = Pentalog;
@@ -32219,12 +32282,111 @@ module.exports = Register;
 
 var React = require('react');
 var Router = require('react-router');
+var Link = Router.Link;
+
+//TODO:
+//1. get user Name using user_id, to show on comments
+//2. remember somewhere logged user to can add comments and likes.
+
+var Pentalog = React.createClass({displayName: "Pentalog",
+	getInitialState: function(){
+			return {
+				imageLoaded: false,
+				image: '',
+				comments: [],
+				likes: ''
+			};
+	}
+
+	, componentWillMount: function() {
+		var self = this;
+		$.ajax({
+			url: 'http://127.0.0.1:8000/api/v1/photos/'
+			, type: 'GET'
+			, error: function(xhr, textStatus, errorThrown) {
+
+			}
+		}).then(function(data) {
+			function findPhoto(img) {
+				return img.id === parseInt(self.props.params.photo_id);
+			}
+            self.setState({imageLoaded: true});
+			self.setState({image: data.find(findPhoto)});
+
+			$.ajax({
+			url: 'http://127.0.0.1:8000/api/photos/' + self.state.image.id + '/comments/'
+			, type: 'GET'
+			, error: function(xhr, textStatus, errorThrown) {
+			}
+			}).then(function(commentData) {
+				self.setState({comments: commentData});
+			});
+
+			$.ajax({
+			url: 'http://127.0.0.1:8000/api/photos/' + self.state.image.id + '/likes/'
+			, type: 'GET'
+			, error: function(xhr, textStatus, errorThrown) {
+			}
+			}).then(function(likesData) {
+				self.setState({likes: likesData});
+			});
+		});
+	}
+
+	, onCommentHandler: function(event) {
+		event.persist();
+
+		var id = event.target.id;
+
+	}
+	, render: function() {
+		var self = this;
+		//debugger;
+		return (
+			React.createElement("div", {className: "container"}, 
+				React.createElement("div", {className: "row image-gallery-bg"}, 
+					React.createElement("div", {className: "col-md-12"}, 
+						React.createElement("img", {className: "img-rounded photo-img", src: 'http://127.0.0.1:8000' + self.state.image.photo, width: "100%"})
+					), 
+					React.createElement("div", {className: "col-md-7 well"}, 
+						React.createElement("h1", null, "Comments"), 
+						self.state.comments.map(function (item) {
+							return (
+							React.createElement("div", null, 
+								React.createElement("h5", null, React.createElement("b", null, item.user, " said: "), React.createElement("i", null, item.comment))
+							)
+						);
+						}), 
+					",", 
+						self.state.comments.length === 0 ? React.createElement("div", null, "No comments") : ''
+
+					), 
+					React.createElement("span", {className: "like-icon glyphicon glyphicon-thumbs-up"}), React.createElement("span", {className: "like-label"}, self.state.likes)
+				)
+				)
+			
+
+			);
+	}
+});
+
+	
+
+
+
+module.exports = Pentalog;
+
+},{"react":196,"react-router":27}],205:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+var Router = require('react-router');
 var routes = require('./routes');
 
 Router.run(routes, function(Handler) {
 	React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./routes":205,"react":196,"react-router":27}],205:[function(require,module,exports){
+},{"./routes":206,"react":196,"react-router":27}],206:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32247,10 +32409,11 @@ var routes = (
     React.createElement(Route, {name: "register", handler: require('./components/registerPage')}), 
 
     React.createElement(Route, {name: "login", handler: require('./components/loginPage')}), 
-    React.createElement(Route, {name: "pentalog", handler: require('./components/pentalogPage')})
+    React.createElement(Route, {name: "pentalog", handler: require('./components/pentalogPage')}), 
+    React.createElement(Route, {name: "pentalog:photo_id", handler: require('./components/singlePhoto')})
   )
 );
 
 module.exports = routes;
 
-},{"./components/about/aboutPage":197,"./components/app":198,"./components/loginPage":200,"./components/notFoundPage":201,"./components/pentalogPage":202,"./components/registerPage":203,"react":196,"react-router":27}]},{},[204]);
+},{"./components/about/aboutPage":197,"./components/app":198,"./components/loginPage":200,"./components/notFoundPage":201,"./components/pentalogPage":202,"./components/registerPage":203,"./components/singlePhoto":204,"react":196,"react-router":27}]},{},[205]);
