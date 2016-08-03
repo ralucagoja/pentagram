@@ -35,7 +35,7 @@ var Login = React.createClass({
         return (
 
             <div>
-                <div className="text-center jumbotron">
+                <div className="text-center">
                 <form>
                     <h2> Login form </h2>
                     <input type="text" name="username" placeholder="Enter your name" onChange={this.userChangeHandler}/><br/>

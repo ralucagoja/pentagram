@@ -32088,7 +32088,7 @@ var Login = React.createClass({displayName: "Login",
         return (
 
             React.createElement("div", null, 
-                React.createElement("div", {className: "text-center jumbotron"}, 
+                React.createElement("div", {className: "text-center"}, 
                 React.createElement("form", null, 
                     React.createElement("h2", null, " Login form "), 
                     React.createElement("input", {type: "text", name: "username", placeholder: "Enter your name", onChange: this.userChangeHandler}), React.createElement("br", null), 
@@ -32142,7 +32142,7 @@ var Pentalog = React.createClass({displayName: "Pentalog",
 getInitialState: function(){
             return {
                 images: [{
-                    "id": 1,
+                    "id": 2,
                     "user": 2,
                     "photo": "photos/user_raluca/7f64ac54-4a5d-11e6-9170-ace0105093c9_Old-Sailboat-Sunset-1600x900.jpg "
                 }]
@@ -32188,11 +32188,11 @@ getInitialState: function(){
                                     React.createElement("div", {className: "img-caption"}, 
                                         React.createElement("div", {className: "img-caption-divs"}, 
                                             React.createElement("a", {href: ""}, 
-                                                React.createElement("i", {className: "material-icons my-img-comment-icon"}, "comments"), 
-                                                "Comments"
+                                                React.createElement("i", {className: "material-icons my-img-like-icon left"}, "comment"), 
+                                                " "
                                             )
                                         ), 
-                                        React.createElement("div", {className: "img-caption-divs"}, 
+                                         React.createElement("div", {className: "img-caption-divs"}, 
                                             React.createElement("a", {href: ""}, 
                                                 React.createElement("i", {className: "material-icons my-img-like-icon right"}, "thumb_up"), 
                                                 " "
@@ -32247,17 +32247,18 @@ var Register = React.createClass({displayName: "Register",
             event.preventDefault();
             console.log(this.state);
             $.ajax({
-              url: 'http://127.0.0.1:8000/api/v1/login/'
+              url: 'http://127.0.0.1:8000/api/v1/users/'
               , type: 'POST'
               , data: this.state
             }).then(function(data) {
               sessionStorage.setItem('authToken', data.token);
+              Router.HashLocation.push("pentalog");
               //redirect to homepage
             });
         },
     render: function () {
         return (
-                React.createElement("div", {className: "text-center jumbotron"}, 
+                React.createElement("div", {className: "text-center"}, 
                 React.createElement("form", null, 
                 React.createElement("h2", null, " Create a new account :) "), 
                 React.createElement("br", null), 
@@ -32267,7 +32268,7 @@ var Register = React.createClass({displayName: "Register",
                 React.createElement("br", null), 
                 React.createElement("input", {type: "password", placeholder: "Re-enter your pass", onChange: this.passwordRepeatChangeHandler}), " ", React.createElement("br", null), 
                 React.createElement("br", null), 
-                React.createElement("input", {type: "mail", placeholder: "Enter your e-mail", onChange: this.emailChangeHandler}), " ", React.createElement("br", null), 
+                React.createElement("input", {type: "email", placeholder: "Enter your e-mail", onChange: this.emailChangeHandler}), " ", React.createElement("br", null), 
                 React.createElement("br", null), 
                 React.createElement("input", {type: "submit", className: "button", value: "Register", onClick: this.formSubmitHandler})
                 )

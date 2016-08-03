@@ -9,7 +9,7 @@ var Pentalog = React.createClass({
 getInitialState: function(){
             return {
                 images: [{
-                    "id": 1,
+                    "id": 2,
                     "user": 2,
                     "photo": "photos/user_raluca/7f64ac54-4a5d-11e6-9170-ace0105093c9_Old-Sailboat-Sunset-1600x900.jpg "
                 }]
@@ -55,11 +55,11 @@ getInitialState: function(){
                                     <div className='img-caption'>
                                         <div className='img-caption-divs'>
                                             <a href="">
-                                                <i className='material-icons my-img-comment-icon'>comments</i>
-                                                Comments
+                                                <i className='material-icons my-img-like-icon left' >comment</i>
+                                                &nbsp;
                                             </a>
                                         </div>
-                                        <div className='img-caption-divs'>
+                                         <div className='img-caption-divs'>
                                             <a href="">
                                                 <i className='material-icons my-img-like-icon right' >thumb_up</i>
                                                 &nbsp;

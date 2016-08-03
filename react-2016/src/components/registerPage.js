@@ -32,17 +32,18 @@ var Register = React.createClass({
             event.preventDefault();
             console.log(this.state);
             $.ajax({
-              url: 'http://127.0.0.1:8000/api/v1/login/'
+              url: 'http://127.0.0.1:8000/api/v1/users/'
               , type: 'POST'
               , data: this.state
             }).then(function(data) {
               sessionStorage.setItem('authToken', data.token);
+              Router.HashLocation.push("pentalog");
               //redirect to homepage
             });
         },
     render: function () {
         return (
-                <div className="text-center jumbotron">
+                <div className="text-center">
                 <form>
                 <h2> Create a new account :) </h2>
                 <br />
@@ -52,7 +53,7 @@ var Register = React.createClass({
                 <br />
                 <input type="password" placeholder="Re-enter your pass" onChange={this.passwordRepeatChangeHandler}/> <br />
                 <br />
-                <input type="mail" placeholder="Enter your e-mail" onChange={this.emailChangeHandler}/> <br />
+                <input type="email" placeholder="Enter your e-mail" onChange={this.emailChangeHandler}/> <br />
                 <br />
                 <input type="submit" className="button" value="Register" onClick={this.formSubmitHandler}/>
                 </form>
