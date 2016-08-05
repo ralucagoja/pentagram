@@ -27,6 +27,7 @@ var Login = React.createClass({
                 , data: this.state
             }).then(function(data) {
                 sessionStorage.setItem('authToken', data.token);
+                sessionStorage.setItem('id', data.id);
                 Router.HashLocation.push("pentalog");
               });
         },

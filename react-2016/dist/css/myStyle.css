@@ -87,6 +87,7 @@ h2 {
     background: rgba(0,0,0,0.5);
     color: #FFF;
     width: 100%;
+    height: 50%;
 }
 
 i.my-img-comment-icon {
@@ -110,8 +111,8 @@ i.my-img-like-icon {
 }
 
 
-.image-block > div.img-caption > div.img-caption-divs > a:hover {
-    color: yellow;
+div.img-caption > div.img-caption-divs > a:hover {
+    color: #2D867B;
     cursor: pointer;
 }
 

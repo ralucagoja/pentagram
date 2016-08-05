@@ -32054,6 +32054,47 @@ module.exports = Header;
 "use strict";
 
 var React = require('react');
+
+var Input = React.createClass({displayName: "Input",
+  propTypes: {
+    name: React.PropTypes.string.isRequired,
+    label: React.PropTypes.string.isRequired,
+    onChange: React.PropTypes.func.isRequired,
+    placeholder: React.PropTypes.string,
+    value: React.PropTypes.string,
+    error: React.PropTypes.string
+  },
+
+  render: function () {
+    var wrapperClass = 'form-group';
+    if (this.props.error && this.props.error.length > 0) {
+      wrapperClass += " " + 'has-error';
+    }
+    
+    return (
+     React.createElement("div", {className: wrapperClass}, 
+        React.createElement("label", {htmlFor: this.props.name}, this.props.label), 
+        React.createElement("div", {className: "field"}, 
+          React.createElement("input", {type: "text", 
+            name: this.props.name, 
+            className: "form-control", 
+            placeholder: this.props.placeholder, 
+            ref: this.props.name, 
+            value: this.props.value, 
+            onChange: this.props.onChange}), 
+          React.createElement("div", {className: "input"}, this.props.error)
+        )
+      )
+    );
+  }
+});
+
+module.exports = Input;
+
+},{"react":196}],201:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
@@ -32080,6 +32121,7 @@ var Login = React.createClass({displayName: "Login",
                 , data: this.state
             }).then(function(data) {
                 sessionStorage.setItem('authToken', data.token);
+                sessionStorage.setItem('id', data.id);
                 Router.HashLocation.push("pentalog");
               });
         },
@@ -32110,7 +32152,7 @@ var Login = React.createClass({displayName: "Login",
 });
 module.exports = Login;
 
-},{"react":196,"react-router":27}],201:[function(require,module,exports){
+},{"react":196,"react-router":27}],202:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32130,13 +32172,14 @@ var NotFoundPage = React.createClass({displayName: "NotFoundPage",
 
 module.exports = NotFoundPage;
 
-},{"react":196,"react-router":27}],202:[function(require,module,exports){
+},{"react":196,"react-router":27}],203:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-
+var RouteHandler = require('react-router').RouteHandler;
+var Input = require('./common/textInput');
 var Pentalog = React.createClass({displayName: "Pentalog",
 
 getInitialState: function(){
@@ -32145,7 +32188,10 @@ getInitialState: function(){
                     "id": 2,
                     "user": 2,
                     "photo": "photos/user_raluca/7f64ac54-4a5d-11e6-9170-ace0105093c9_Old-Sailboat-Sunset-1600x900.jpg "
-                }]
+                }],
+                likes: '',
+                comments: [],
+                fetchComments: false
             };
     },
 
@@ -32160,15 +32206,78 @@ getInitialState: function(){
         }).then(function(data) {
             self.setState({images: data});
         });
+          $.ajax({
+            url: 'http://127.0.0.1:8000/api/photos/' + '1' + '/like/'
+            , type: 'GET'
+            , error: function (xhr, textStatus, errorThrown) {
+            }
+        }).then(function (likesData) {
+            console.log(likesData);
+            self.setState({likes: likesData});
+        });
     }
 
     , onCommentHandler: function(event) {
-        var photoId = event.target.dataset.id;
-        Router.HashLocation.push('photo/' + photoId);
+       // var photoId = event.target.dataset.id;
+       // Router.HashLocation.push('photo/' + photoId);
+       this.setState({comment: event.target.value});
     }
-    , render: function() {
+    , 
+
+     onLikeHandler: function (event) {
+        console.log('Like/Unlike button was pressed!');
+        var token = sessionStorage.getItem("authToken");
+        var user = sessionStorage.getItem("id");
+        var photoId = event.target.dataset.id;
+        $.ajax({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Token ' + token);
+            },
+            url: 'http://127.0.0.1:8000/api/photos/' + photoId + '/like/'
+            , type: 'POST'
+        });
+
+    },
+     onCommentSubmitHandler: function (event) {
+        event.preventDefault();
+        console.log(this.state);
+        var photoId = event.target.dataset.id;
+        if (this.state.comment == null) {
+            console.log("comment null");
+        } else {
+            var token = sessionStorage.getItem("authToken");
+            //this.setState({user: sessionStorage.getItem("id")});
+            $.ajax({
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Token ' + token);
+                },
+                url: 'http://127.0.0.1:8000/api/photos/' + photoId + '/comments/'
+                , type: 'POST'
+            });
+        }
+    },
+    showComments: function (event) {
+        var photoId = event.target.dataset.id;
+        var self = this;
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/photos/' + photoId + '/comments/'
+            , type: 'GET'
+            , error: function (xhr, textStatus, errorThrown) {
+            }
+        }).then(function (commentData) {
+            self.setState({comments: commentData});
+        });
+        this.setState({
+            fetchComments: true
+        });
+    },
+
+    render: function() {
         var self = this;
 
+        var likeHandle = this.onLikeHandler;
+        var commentHandle = this.onCommentHandler;
+        var commentSubmitHandle = this.onCommentSubmitHandler;
         var tokenNumber = sessionStorage.getItem("authToken");
         if (!tokenNumber) {
             Router.HashLocation.push("login");
@@ -32187,17 +32296,37 @@ getInitialState: function(){
                                     ), 
                                     React.createElement("div", {className: "img-caption"}, 
                                         React.createElement("div", {className: "img-caption-divs"}, 
-                                            React.createElement("a", {href: ""}, 
+                                            React.createElement("a", {onClick: self.showComments}, 
                                                 React.createElement("i", {className: "material-icons my-img-like-icon left"}, "comment"), 
                                                 " "
                                             )
                                         ), 
-                                         React.createElement("div", {className: "img-caption-divs"}, 
-                                            React.createElement("a", {href: ""}, 
+                                         React.createElement("div", {className: "img-caption"}, 
+                                          React.createElement("div", {className: "img-caption-divs"}, 
+                                            React.createElement("a", {onClick: likeHandle}, 
                                                 React.createElement("i", {className: "material-icons my-img-like-icon right"}, "thumb_up"), 
                                                 " "
                                             )
-                                        )
+                                            )
+                                        ), 
+                                         React.createElement("div", {className: "card-reveal"}, 
+                                                React.createElement("p", null, 
+                                                    self.state.comments.map(function (commItem) {
+                                                        return (
+                                                            React.createElement("div", {className: "left-align"}, 
+                                                                React.createElement("p", null, 
+                                                                    React.createElement("div", {className: "chip"}, commItem.user), 
+                                                                    commItem.comment
+                                                                )
+                                                            )
+                                                        );
+                                                    })
+                                                ), 
+                                                React.createElement("p", null, React.createElement("input", {placeholder: "Comment", 
+                                                          name: "comment", 
+                                                          inputChangeHandler: commentHandle})
+                                                )
+                                            )
                                     )
                                 )
                                 )
@@ -32212,7 +32341,7 @@ getInitialState: function(){
 
 module.exports = Pentalog;
 
-},{"react":196,"react-router":27}],203:[function(require,module,exports){
+},{"./common/textInput":200,"react":196,"react-router":27}],204:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32278,16 +32407,12 @@ var Register = React.createClass({displayName: "Register",
 });
 module.exports = Register;
 
-},{"react":196,"react-router":27}],204:[function(require,module,exports){
+},{"react":196,"react-router":27}],205:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-
-//TODO:
-//1. get user Name using user_id, to show on comments
-//2. remember somewhere logged user to can add comments and likes.
 
 var Pentalog = React.createClass({displayName: "Pentalog",
 	getInitialState: function(){
@@ -32332,13 +32457,10 @@ var Pentalog = React.createClass({displayName: "Pentalog",
 				self.setState({likes: likesData});
 			});
 		});
-	}
-
-	, onCommentHandler: function(event) {
+	},
+	onCommentHandler: function(event) {
 		event.persist();
-
 		var id = event.target.id;
-
 	}
 	, render: function() {
 		var self = this;
@@ -32377,7 +32499,7 @@ var Pentalog = React.createClass({displayName: "Pentalog",
 
 module.exports = Pentalog;
 
-},{"react":196,"react-router":27}],205:[function(require,module,exports){
+},{"react":196,"react-router":27}],206:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32387,7 +32509,7 @@ var routes = require('./routes');
 Router.run(routes, function(Handler) {
 	React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./routes":206,"react":196,"react-router":27}],206:[function(require,module,exports){
+},{"./routes":207,"react":196,"react-router":27}],207:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32417,4 +32539,4 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/about/aboutPage":197,"./components/app":198,"./components/loginPage":200,"./components/notFoundPage":201,"./components/pentalogPage":202,"./components/registerPage":203,"./components/singlePhoto":204,"react":196,"react-router":27}]},{},[205]);
+},{"./components/about/aboutPage":197,"./components/app":198,"./components/loginPage":201,"./components/notFoundPage":202,"./components/pentalogPage":203,"./components/registerPage":204,"./components/singlePhoto":205,"react":196,"react-router":27}]},{},[206]);

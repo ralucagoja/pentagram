@@ -4,10 +4,6 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-//TODO:
-//1. get user Name using user_id, to show on comments
-//2. remember somewhere logged user to can add comments and likes.
-
 var Pentalog = React.createClass({
 	getInitialState: function(){
 			return {
@@ -51,13 +47,10 @@ var Pentalog = React.createClass({
 				self.setState({likes: likesData});
 			});
 		});
-	}
-
-	, onCommentHandler: function(event) {
+	},
+	onCommentHandler: function(event) {
 		event.persist();
-
 		var id = event.target.id;
-
 	}
 	, render: function() {
 		var self = this;
